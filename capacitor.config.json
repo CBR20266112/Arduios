@@ -1,0 +1,31 @@
+{
+  "appId": "com.adios.arduinosimulator",
+  "appName": "아두이노 시뮬레이터",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": false
+  },
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false,
+    "backgroundColor": "#0d1b2a"
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "backgroundColor": "#0d1b2a"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#0d1b2a",
+      "androidSplashResourceName": "splash",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "dark",
+      "backgroundColor": "#0d1b2a"
+    }
+  }
+}

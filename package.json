@@ -1,0 +1,29 @@
+{
+  "name": "arduino-simulator",
+  "version": "1.0.0",
+  "description": "아두이노 교육용 시뮬레이터 앱 — 웹앱 & Capacitor APK",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve . -p 8080",
+    "build": "powershell -ExecutionPolicy Bypass -File build.ps1",
+    "build:mac": "bash build.sh",
+    "cap:add:android": "npx cap add android",
+    "cap:add:ios": "npx cap add ios",
+    "cap:sync": "npm run build && npx cap sync",
+    "cap:sync:android": "npm run build && npx cap sync android",
+    "cap:run:android": "npm run build && npx cap run android",
+    "cap:open:android": "npx cap open android",
+    "cap:open:ios": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/ios": "^6.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0"
+  },
+  "keywords": ["arduino", "simulator", "education", "capacitor", "pwa"],
+  "author": "Adios Project",
+  "license": "MIT"
+}

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>아두이노 시뮬레이터 (Arduino Simulator)</title>
+
+  <!-- PWA 매니페스트 & 테마 -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0d1b2a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="아두이노 시뮬">
+  <meta name="description" content="아두이노 기초 회로를 배우는 교육용 시뮬레이터 앱">
+
+  <!-- 앱 아이콘 (PWA & iOS 홈 화면 추가) -->
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
+
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Google Fonts: Inter & Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="device-wrapper">
+    <div class="app-container">
+      
+      <!-- 1. 시작 화면 (Title Screen) -->
+      <section id="title-screen" class="screen active">
+        <header class="app-header">
+          <div class="header-title">
+            <span class="app-icon">🤖</span>
+            <h1 data-i18n="appTitle">아두이노 시뮬레이터</h1>
+          </div>
+          <div class="header-actions">
+            <button id="btn-title-settings" class="icon-btn" aria-label="설정">⚙️</button>
+            <button id="btn-title-help" class="icon-btn" aria-label="도움말">?</button>
+          </div>
+        </header>
+
+        <main class="title-main">
+          <!-- 실물 아두이노 키트 상자 비주얼 카드 -->
+          <div class="kit-box-card">
+            <div class="kit-box-illustration">
+              <div class="kit-box-grid">
+                <div class="kit-slot board-slot">
+                  <div class="mini-board">UNO</div>
+                </div>
+                <div class="kit-slot breadboard-slot">
+                  <div class="mini-bb"></div>
+                </div>
+                <div class="kit-slot wire-slot">
+                  <div class="wire-bundle"></div>
+                </div>
+                <div class="kit-slot components-slot">
+                  <span class="mini-led red"></span>
+                  <span class="mini-led yellow"></span>
+                  <span class="mini-led green"></span>
+                  <span class="mini-resistor"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="start-action">
+            <button id="btn-start" class="btn-primary-large">
+              <span class="play-icon">▶</span>
+              <span data-i18n="touchToStart">Touch to start</span>
+            </button>
+            <p class="start-subtext" data-i18n="touchSubtext">화면을 터치하여 시작</p>
+          </div>
+        </main>
+
+        <footer class="title-footer">
+          <span data-i18n="appSubCaption">아두이노 회로 학습 시뮬레이터</span>
+        </footer>
+      </section>
+
+      <!-- 2. 회로 조립 화면 (Circuit Workspace Screen) -->
+      <section id="workspace-screen" class="screen hidden">
+        <header class="workspace-header">
+          <div class="project-selector" id="project-select" title="프로젝트 관리">
+            <span id="current-project-title-text">📁 내 회로 프로젝트 #1</span>
+            <span class="select-arrow">▼</span>
+          </div>
+          <div class="header-right">
+            <button id="btn-save-project" class="icon-btn" aria-label="저장">💾</button>
+            <button id="btn-workspace-settings" class="icon-btn" aria-label="설정">⚙️</button>
+            <button id="btn-workspace-help" class="icon-btn" aria-label="도움말">?</button>
+          </div>
+        </header>
+
+        <!-- 상단 노트북 연결 뷰 -->
+        <div class="laptop-container">
+          <div class="laptop-graphic">
+            <div class="laptop-screen">
+              <div class="circuit-symbol"></div>
+              <span class="status-dot"></span>
+            </div>
+            <div class="laptop-base"></div>
+          </div>
+          <div class="usb-status-badge">
+            <span class="status-indicator">🟢</span>
+            <span data-i18n="usbConnected">USB 연결됨</span>
+          </div>
+          <div class="usb-wire-line"></div>
+        </div>
+
+        <div class="workspace-resize-handle">
+          <span>↕</span> <small data-i18n="adjustWorkspace">작업 공간 크기 조절</small>
+        </div>
+
+        <!-- 중앙 회로 작업 공간 (Grid Canvas) -->
+        <main class="workspace-main">
+          <div class="workspace-header-bar">
+            <span data-i18n="circuitWorkspaceTitle">회로 작업 공간</span>
+          </div>
+
+          <!-- 뷰포트 조작 툴바 -->
+          <div class="viewport-toolbar">
+            <button id="btn-zoom-in" class="viewport-btn" title="확대">🔍+</button>
+            <button id="btn-zoom-out" class="viewport-btn" title="축소">🔍-</button>
+            <button id="btn-zoom-fit" class="viewport-btn" title="전체 보기">[ ]</button>
+            <div id="zoom-level-badge" class="zoom-badge">100%</div>
+          </div>
+
+          <!-- 회로 작업 캔버스 영역 -->
+          <div id="circuit-canvas" class="circuit-canvas grid-enabled">
+            <!-- 부품 미배치 시 안내 패널 -->
+            <div id="empty-workspace-notice" class="empty-notice">
+              <div class="dashed-box-icon">📦</div>
+              <p class="notice-title" data-i18n="emptyNoticeTitle">부품 버튼을 눌러 조립을 시작하세요</p>
+              <p class="notice-sub" data-i18n="emptyNoticeSub">아직 배치된 부품이 없습니다</p>
+              <button id="btn-try-tutorial" class="btn-try-tutorial" data-i18n="btnTryTutorial">📖 따라해보기</button>
+            </div>
+
+            <!-- 점퍼 연결선 SVG 레이어 -->
+            <svg id="wires-layer" class="wires-layer"></svg>
+
+            <!-- 배치된 부품들이 들어갈 컨테이너 -->
+            <div id="placed-components-layer" class="components-layer"></div>
+          </div>
+        </main>
+
+        <div class="workspace-resize-handle">
+          <span>↕</span> <small data-i18n="adjustWorkspace">작업 공간 크기 조절</small>
+        </div>
+
+        <!-- 정보 패널 (슬라이드업 bottom sheet) -->
+        <div id="info-panel" class="info-panel">
+          <button id="info-panel-tab" class="info-panel-tab" aria-label="정보 패널 열기/닫기">
+            <span class="info-tab-label" data-i18n="infoPanelLabel">🔍 회로 정보</span>
+            <span id="info-panel-tab-icon" class="info-tab-icon">▲</span>
+          </button>
+          <div id="info-panel-body" class="info-panel-body">
+            <div class="info-placeholder" data-i18n="infoPanelDefault">💡 부품이나 선을 눌러 정보를 확인하세요</div>
+          </div>
+        </div>
+
+        <!-- 하단 액션 버튼 바 -->
+        <footer class="workspace-footer">
+          <button id="btn-reset" class="btn-footer">
+            <span class="icon">🔄</span>
+            <span data-i18n="btnReset">리셋</span>
+          </button>
+          <button id="btn-open-drawer" class="btn-footer btn-primary">
+            <span class="icon">🧰</span>
+            <span data-i18n="btnComponents">부품</span>
+          </button>
+        </footer>
+      </section>
+
+      <!-- 3. 부품 보관함 팝업 (Components Drawer Modal) -->
+      <div id="drawer-modal" class="modal-overlay hidden">
+        <div class="drawer-modal-content">
+          <div class="modal-header">
+            <h3 data-i18n="componentsDrawerTitle">부품 보관함</h3>
+            <button id="btn-close-drawer" class="btn-close">&times;</button>
+          </div>
+          <div class="drawer-body">
+            <div class="components-grid" id="components-list">
+              <!-- 부품 목록이 dynamic하게 삽입됩니다 -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 설정 모달 (Settings Modal) -->
+      <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content settings-content">
+          <div class="modal-header">
+            <div>
+              <h2 data-i18n="settingsTitle">설정</h2>
+              <p class="sub-desc" data-i18n="settingsDesc">앱 사용 환경을 설정할 수 있습니다</p>
+            </div>
+            <button id="btn-close-settings" class="btn-close">&times;</button>
+          </div>
+          
+          <div class="settings-body">
+            <!-- 언어 섹션 -->
+            <div class="settings-group">
+              <h3 data-i18n="secLanguage">언어</h3>
+              <div class="setting-item">
+                <span data-i18n="appLanguage">앱 언어</span>
+                <select id="setting-language">
+                  <option value="ko">한국어</option>
+                  <option value="en">English</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- 회로 작업 공간 섹션 -->
+            <div class="settings-group">
+              <h3 data-i18n="secWorkspace">회로 작업 공간</h3>
+              <div class="setting-item">
+                <span data-i18n="showGrid">격자 표시</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-show-grid" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="setting-item">
+                <span data-i18n="highContrast">고대비 모드</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-high-contrast">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="settings-actions">
+              <button id="btn-reset-settings" class="btn-danger-outline" data-i18n="resetSettings">설정 초기화</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 5. 튜토리얼 모달 (Tutorial Modal) -->
+  <div id="tutorial-modal" class="modal-overlay hidden">
+    <div class="modal-content tutorial-content">
+      <!-- 헤더 -->
+      <div class="modal-header tut-header">
+        <h2 data-i18n="tutorialTitle">도움말</h2>
+        <button id="btn-tutorial-close" class="btn-close">&times;</button>
+      </div>
+
+      <!-- 슬라이드 본문 -->
+      <div class="tut-body">
+        <div class="tut-icon" id="tut-icon">🧰</div>
+        <h3 class="tut-title" id="tut-title">부품을 꺼내세요</h3>
+        <p class="tut-desc" id="tut-desc"></p>
+        <div class="tut-tip" id="tut-tip"></div>
+      </div>
+
+      <!-- 스텝 인디케이터 -->
+      <div class="tut-dots">
+        <span class="tut-dot active"></span>
+        <span class="tut-dot"></span>
+        <span class="tut-dot"></span>
+      </div>
+
+      <!-- 내비게이션 버튼 -->
+      <div class="tut-nav">
+        <button id="btn-tutorial-prev" class="btn-tut-nav" disabled data-i18n="tutPrev">◀ 이전</button>
+        <button id="btn-tutorial-next" class="btn-tut-nav" data-i18n="tutNext">다음 ▶</button>
+      </div>
+
+      <!-- 예시 회로 버튼 (마지막 슬라이드에만 표시) -->
+      <button id="btn-load-example" class="btn-load-example" style="display:none" data-i18n="btnLoadExample">⚡ 예시 회로 불러오기</button>
+    </div>
+  </div>
+
+  <!-- 6. 프로젝트 저장 & 관리 모달 (Project Manager Modal) -->
+  <div id="project-modal" class="modal-overlay hidden">
+    <div class="modal-content project-modal-content">
+      <div class="modal-header">
+        <div class="header-title-group">
+          <h2 data-i18n="projectModalTitle">📁 회로 프로젝트 관리</h2>
+          <p class="sub-desc" data-i18n="projectModalSub">회로 작업 저장 슬롯을 안심하고 관리하세요</p>
+        </div>
+        <button id="btn-close-project-modal" class="btn-close">&times;</button>
+      </div>
+
+      <!-- 프로젝트 이름 입력 섹션 -->
+      <div class="project-name-section">
+        <label for="project-name-input" data-i18n="labelProjectName">프로젝트 이름</label>
+        <div class="name-input-wrapper">
+          <input type="text" id="project-name-input" class="project-name-input" placeholder="내 회로 프로젝트" maxlength="24">
+          <button id="btn-new-project-action" class="btn-new-project-action" data-i18n="btnStartNewProject">✨ 새 프로젝트</button>
+        </div>
+      </div>
+
+      <!-- 5개 저장 슬롯 목록 -->
+      <div class="slots-section">
+        <h3 class="slots-heading" data-i18n="slotsHeading">💾 저장 슬롯 (5개)</h3>
+        <div id="project-slots-list" class="slots-list">
+          <!-- JS dynamic slots rendering -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript 모듈 -->
+  <script src="js/i18n.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/components-data.js"></script>
+  <script src="js/workspace.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/tutorial.js"></script>
+  <script src="js/info-panel.js"></script>
+  <script src="js/projects.js"></script>
+
+  <!-- 서비스워커 등록 (PWA 오프라인 캐싱) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('[SW] 등록 성공:', reg.scope))
+          .catch(err => console.warn('[SW] 등록 실패:', err));
+      });
+    }
+  </script>
+</body>
+</html>

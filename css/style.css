@@ -1,0 +1,1401 @@
+/* ==========================================================================
+   아두이노 교육용 시뮬레이터 (Arduino Simulator) Design System & Styles
+   ========================================================================== */
+
+/* 1. Root Tokens */
+:root {
+  --bg-app: #f4f6f9;
+  --bg-card: #ffffff;
+  --bg-dark-canvas: #1a202c;
+  --bg-grid-dot: #2d3748;
+  
+  --primary-color: #1b4965;
+  --primary-hover: #133549;
+  --primary-light: #e8f1f5;
+  --accent-blue: #0077b6;
+  
+  --text-main: #2b2d42;
+  --text-muted: #6c757d;
+  --text-light: #f8f9fa;
+
+  --border-color: #e2e8f0;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.18);
+  
+  --font-family: 'Inter', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+}
+
+/* High Contrast Theme */
+body.high-contrast {
+  --bg-dark-canvas: #000000;
+  --text-main: #000000;
+  --primary-color: #004080;
+  --border-color: #000000;
+}
+
+/* 2. Global Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  font-family: var(--font-family);
+  background-color: #e9ecef;
+  color: var(--text-main);
+  overflow: hidden;
+}
+
+/* 3. Device Wrapper (Mobile-First Container) */
+.device-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  padding: 12px;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 430px; /* iPhone 14 Pro Max / Standard Mobile Portrait Width */
+  height: 100%;
+  max-height: 900px;
+  background-color: var(--bg-app);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Screen Transitions */
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-app);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
+  will-change: transform, opacity;
+  z-index: 1;
+}
+
+.screen.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+
+.screen.hidden {
+  display: none;
+}
+
+/* 4. Common Headers & Buttons */
+.app-header, .workspace-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-icon {
+  font-size: 1.4rem;
+}
+
+.header-title h1 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.header-actions, .header-right {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: #f1f3f5;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.icon-btn:active {
+  background: #e2e8f0;
+  transform: scale(0.95);
+}
+
+/* 5. Title Screen Styles */
+.title-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  gap: 32px;
+  text-align: center;
+}
+
+.kit-box-card {
+  width: 240px;
+  height: 240px;
+  background: linear-gradient(145deg, #ffffff, #e6ecf2);
+  border: 2px solid rgba(255,255,255,0.8);
+  border-radius: 28px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  position: relative;
+}
+
+.kit-box-illustration {
+  width: 100%;
+  height: 100%;
+  background: rgba(224, 235, 245, 0.6);
+  border-radius: var(--radius-md);
+  border: 2px dashed #b0c4de;
+  padding: 12px;
+}
+
+.kit-box-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  height: 100%;
+}
+
+.kit-slot {
+  background: #ffffff;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mini-board {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  background: #0077b6;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.mini-bb {
+  width: 80%;
+  height: 60%;
+  background: #fdfdfd;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.components-slot {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.mini-led {
+  width: 10px;
+  height: 14px;
+  border-radius: 5px 5px 2px 2px;
+}
+.mini-led.red { background: #e63946; }
+.mini-led.yellow { background: #ffb703; }
+.mini-led.green { background: #38b000; }
+
+.btn-primary-large {
+  background: linear-gradient(135deg, #1b4965, #0077b6);
+  color: #fff;
+  border: none;
+  padding: 16px 36px;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 20px rgba(0,119,182,0.3);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.btn-primary-large:active {
+  transform: scale(0.97);
+  box-shadow: 0 4px 10px rgba(0,119,182,0.2);
+}
+
+.start-subtext {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.title-footer {
+  padding: 16px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* 6. Circuit Workspace Screen Styles */
+.project-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f3f5;
+  border: 1px solid #dee2e6;
+  border-radius: var(--radius-sm);
+  padding: 7px 30px 7px 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  max-width: 220px;
+  overflow: hidden;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+}
+
+.project-selector:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+#current-project-title-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 10px;
+  font-size: 0.7rem;
+  pointer-events: none;
+  color: var(--text-muted);
+}
+
+/* Laptop USB Container */
+.laptop-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+}
+
+.laptop-graphic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.laptop-screen {
+  width: 36px;
+  height: 24px;
+  background: #2b2d42;
+  border: 2px solid #8d99ae;
+  border-radius: 3px 3px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.laptop-screen .status-dot {
+  width: 6px;
+  height: 6px;
+  background: #38b000;
+  border-radius: 50%;
+}
+
+.laptop-base {
+  width: 44px;
+  height: 4px;
+  background: #8d99ae;
+  border-radius: 0 0 2px 2px;
+}
+
+.usb-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2b2d42;
+}
+
+.workspace-resize-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: #f8f9fa;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Main Workspace Canvas Area */
+.workspace-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-dark-canvas);
+}
+
+.workspace-header-bar {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  z-index: 10;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+}
+
+/* Viewport Toolbar */
+.viewport-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.viewport-btn {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+}
+
+.viewport-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.zoom-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  padding: 4px 0;
+}
+
+/* SVG Wires Layer */
+.wires-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* SVG background: no pointer events */
+  z-index: 6;
+  overflow: visible;
+}
+
+.wire-path {
+  fill: none;
+  stroke-width: 4px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: visibleStroke; /* only the stroked area catches events */
+  cursor: pointer;
+  filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.3));
+  transition: stroke-width 0.15s ease;
+}
+
+.wire-path:hover {
+  stroke-width: 7px;
+}
+
+/* Pin Ports */
+/* Pin Ports — above wires-layer (z-index: 6) */
+.pin-port {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #0077b6;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  z-index: 30;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease, background 0.15s ease;
+  touch-action: manipulation;
+}
+
+.pin-port:hover {
+  transform: translate(-50%, -50%) scale(1.3);
+}
+
+.pin-port.active {
+  background: #e63946;
+  border-color: #ffb703;
+  transform: translate(-50%, -50%) scale(1.4);
+  box-shadow: 0 0 10px #e63946;
+  animation: pulse-ring 1s infinite alternate;
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 4px #e63946; }
+  100% { box-shadow: 0 0 12px #e63946; }
+}
+
+/* Circuit Grid Canvas */
+.circuit-canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: var(--bg-dark-canvas);
+  overflow: hidden;
+}
+
+.circuit-canvas.grid-enabled {
+  background-image: radial-gradient(var(--bg-grid-dot) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
+.empty-notice {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  color: rgba(255,255,255,0.6);
+  pointer-events: none;
+}
+
+.dashed-box-icon {
+  font-size: 2.5rem;
+  width: 64px;
+  height: 64px;
+  border: 2px dashed rgba(255,255,255,0.3);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.notice-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+}
+
+.notice-sub {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.5);
+}
+
+/* Workspace Footer */
+.workspace-footer {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-top: 1px solid var(--border-color);
+}
+
+.btn-footer {
+  flex: 1;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: #f8f9fa;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.btn-footer.btn-primary {
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+}
+
+.btn-footer:active {
+  transform: scale(0.98);
+}
+
+/* Placed Component Container */
+.placed-component {
+  position: absolute;
+  touch-action: none;
+  user-select: none;
+  will-change: transform, left, top;
+}
+
+/* Modals & Overlays */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-fast);
+  will-change: opacity;
+}
+
+.modal-overlay:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+}
+
+.drawer-modal-content, .settings-content {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 24px 24px 0 0;
+  padding: 20px;
+  max-height: 80%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  will-change: transform;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-header h2, .modal-header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.sub-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.btn-close {
+  background: #f1f3f5;
+  border: none;
+  font-size: 1.4rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Settings Items */
+.settings-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.settings-group h3 {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.setting-item select {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  font-weight: 600;
+}
+
+.btn-danger-outline {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e63946;
+  color: #e63946;
+  background: transparent;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+/* Components Drawer Grid */
+.components-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.component-card {
+  background: #f8f9fa;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.component-card .icon {
+  font-size: 1.8rem;
+}
+
+.component-card .name {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.btn-takeout {
+  width: 100%;
+  padding: 6px 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--primary-light);
+  color: var(--primary-color);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   Tutorial Modal & Empty Screen "따라해보기" Button
+   ========================================================================== */
+
+/* 빈 화면 "따라해보기" 버튼 */
+.empty-notice {
+  pointer-events: all; /* allow button clicks */
+}
+
+.btn-try-tutorial {
+  margin-top: 10px;
+  padding: 10px 22px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #0077B6, #00B4D8);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 119, 182, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  animation: fadeInUp 0.4s ease;
+}
+
+.btn-try-tutorial:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 119, 182, 0.5);
+}
+
+/* 튜토리얼 모달 컨텐츠 */
+.tutorial-content {
+  width: min(380px, 92vw);
+  padding: 28px 24px 20px;
+  border-radius: 20px;
+  background: linear-gradient(160deg, #1c2d40 0%, #12202e 100%);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+}
+
+.tut-header {
+  width: 100%;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 12px;
+}
+
+.tut-header h2 {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* 슬라이드 본문 */
+.tut-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-height: 180px;
+}
+
+.tut-icon {
+  font-size: 3rem;
+  line-height: 1;
+  animation: bounceIn 0.35s ease;
+}
+
+.tut-title {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.tut-desc {
+  color: rgba(255,255,255,0.78);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.tut-desc strong {
+  color: #00B4D8;
+  font-weight: 700;
+}
+
+.tut-tip {
+  background: rgba(0, 180, 216, 0.12);
+  border: 1px solid rgba(0, 180, 216, 0.3);
+  border-radius: 10px;
+  padding: 8px 14px;
+  color: #00B4D8;
+  font-size: 0.82rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* 스텝 인디케이터 점 */
+.tut-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.tut-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.tut-dot.active {
+  background: #00B4D8;
+  transform: scale(1.25);
+}
+
+/* 이전/다음 버튼 */
+.tut-nav {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+}
+
+.btn-tut-nav {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.btn-tut-nav:hover:not(:disabled) {
+  background: rgba(0, 180, 216, 0.2);
+  color: #fff;
+}
+
+.btn-tut-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* 예시 회로 불러오기 버튼 */
+.btn-load-example {
+  width: 100%;
+  padding: 13px 0;
+  font-size: 1rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #E63946, #ff6b6b);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  box-shadow: 0 6px 20px rgba(230, 57, 70, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  animation: fadeInUp 0.3s ease;
+}
+
+.btn-load-example:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(230, 57, 70, 0.55);
+}
+
+/* 예시 회로 배치 토스트 알림 */
+.circuit-toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #1c2d40, #0077B6);
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  text-align: center;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+  z-index: 2000;
+  border: 1px solid rgba(0, 180, 216, 0.3);
+  max-width: 320px;
+  width: 92vw;
+  animation: slideUp 0.35s ease;
+}
+
+.circuit-toast.fade-out {
+  animation: fadeOut 0.4s ease forwards;
+}
+
+/* 애니메이션 키프레임 */
+@keyframes bounceIn {
+  0%   { transform: scale(0.6); opacity: 0; }
+  70%  { transform: scale(1.1); }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translate(-50%, 20px); opacity: 0; }
+  to   { transform: translate(-50%, 0);    opacity: 1; }
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; transform: translateX(-50%) translateY(10px); }
+}
+
+@keyframes fadeInUp {
+  from { transform: translateY(10px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ==========================================================================
+   Info Panel (회로 상태 설명 슬라이드업 패널)
+   ========================================================================== */
+
+.info-panel {
+  width: 100%;
+  background: linear-gradient(180deg, #1a2535 0%, #151d2b 100%);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  /* 접힌 상태: body 숨김 (height: 0) */
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease;
+}
+
+/* 탭(핸들) 버튼 */
+.info-panel-tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 9px 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  min-height: 38px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.info-panel-tab:hover {
+  color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.04);
+}
+
+.info-tab-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.info-tab-icon {
+  font-size: 0.65rem;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+/* 펼친 상태 */
+.info-panel.open .info-panel-body {
+  max-height: 150px;
+  padding: 0 14px 12px;
+  opacity: 1;
+}
+
+.info-panel.open .info-panel-tab {
+  color: rgba(255,255,255,0.8);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.info-panel.open .info-tab-icon {
+  transform: rotate(180deg);
+}
+
+/* 본문 (접힘 기본) */
+.info-panel-body {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.2s ease;
+  padding: 0 14px;
+}
+
+/* 기본 안내 문구 */
+.info-placeholder {
+  color: rgba(255,255,255,0.4);
+  font-size: 0.82rem;
+  padding: 10px 0;
+  text-align: center;
+}
+
+/* 정보 행 */
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0 4px;
+}
+
+.info-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.info-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.info-name {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info-dim {
+  color: rgba(255,255,255,0.45);
+  font-weight: 400;
+  font-size: 0.82rem;
+}
+
+.info-meta {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.75rem;
+}
+
+.selecting-badge {
+  color: #E63946;
+  font-weight: 600;
+  animation: pulse-text 1.2s ease infinite;
+}
+
+@keyframes pulse-text {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+/* 힌트 텍스트 */
+.info-hint {
+  color: rgba(255,255,255,0.35);
+  font-size: 0.74rem;
+  padding: 2px 0 4px 42px;
+}
+
+/* 연결된 핀 목록 */
+.info-connections {
+  padding: 2px 0 4px 42px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-wire-row {
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info-empty {
+  color: rgba(255,255,255,0.3);
+  font-size: 0.78rem;
+}
+
+/* 핀 뱃지 */
+.info-pin-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  margin: 0 2px;
+}
+
+/* 연결선 화살표 */
+.info-arrow {
+  color: rgba(255,255,255,0.4);
+  font-weight: 400;
+  margin: 0 4px;
+}
+
+/* 와이어 색상 원 */
+.wire-color-dot {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   Project Manager Modal & 5 Save Slots UI
+   ========================================================================== */
+
+.project-modal-content {
+  width: min(460px, 94vw);
+  max-height: 85vh;
+  padding: 24px 20px 20px;
+  border-radius: 20px;
+  background: linear-gradient(160deg, #1c2d40 0%, #12202e 100%);
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+}
+
+.project-modal-content .header-title-group h2 {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.project-modal-content .header-title-group .sub-desc {
+  color: rgba(255,255,255,0.55);
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
+/* 프로젝트 이름 입력 섹션 */
+.project-name-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(255,255,255,0.04);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.project-name-section label {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.name-input-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.project-name-input {
+  flex: 1;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.project-name-input:focus {
+  border-color: #00B4D8;
+}
+
+.btn-new-project-action {
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #0077B6, #00B4D8);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-new-project-action:hover {
+  transform: translateY(-1px);
+}
+
+/* 슬롯 목록 헤더 */
+.slots-heading {
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+/* 슬롯 카드 리스트 */
+.slots-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 개별 슬롯 카드 */
+.slot-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.slot-card.current {
+  border-color: #00B4D8;
+  background: rgba(0, 180, 216, 0.08);
+}
+
+.slot-card.empty {
+  opacity: 0.7;
+  border-style: dashed;
+}
+
+.slot-card:hover {
+  border-color: rgba(255,255,255,0.25);
+}
+
+/* 슬롯 헤더 & 뱃지 */
+.slot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.slot-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.08);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.slot-status.active-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #00B4D8;
+  background: rgba(0, 180, 216, 0.15);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.slot-status.empty-tag {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.4);
+}
+
+/* 슬롯 본문 */
+.slot-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.slot-title {
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.slot-empty-msg {
+  color: rgba(255,255,255,0.4);
+  font-size: 0.82rem;
+  margin: 4px 0;
+}
+
+.slot-meta {
+  display: flex;
+  gap: 12px;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.76rem;
+}
+
+/* 슬롯 액션 버튼 그룹 */
+.slot-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-slot {
+  flex: 1;
+  padding: 7px 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.btn-slot:hover {
+  transform: translateY(-1px);
+}
+
+.btn-slot-save {
+  background: linear-gradient(135deg, #0077B6, #00B4D8);
+  color: #fff;
+}
+
+.btn-slot-load {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.btn-slot-delete {
+  flex: 0 0 38px;
+  background: rgba(230, 57, 70, 0.15);
+  color: #E63946;
+  border: 1px solid rgba(230, 57, 70, 0.3);
+}
+
+.btn-slot-delete:hover {
+  background: rgba(230, 57, 70, 0.3);
+}
+
