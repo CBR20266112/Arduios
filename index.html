@@ -6,7 +6,7 @@
   <title>아두이노 시뮬레이터 (Arduino Simulator)</title>
 
   <!-- PWA 매니페스트 & 테마 -->
-  <link rel="manifest" href="/manifest.json">
+  <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#0d1b2a">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,9 +15,9 @@
   <meta name="description" content="아두이노 기초 회로를 배우는 교육용 시뮬레이터 앱">
 
   <!-- 앱 아이콘 (PWA & iOS 홈 화면 추가) -->
-  <link rel="apple-touch-icon" href="/icons/icon-192.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
 
   <link rel="stylesheet" href="css/style.css">
   <!-- Google Fonts: Inter & Noto Sans KR -->
@@ -321,7 +321,7 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('./sw.js')
           .then(reg => console.log('[SW] 등록 성공:', reg.scope))
           .catch(err => console.warn('[SW] 등록 실패:', err));
       });

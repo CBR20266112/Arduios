@@ -5,22 +5,22 @@
 
 const CACHE_NAME = 'arduino-sim-v1';
 
-// 오프라인에서도 동작해야 하는 핵심 파일 목록
+// GitHub Pages 프로젝트 경로에서도 동작하도록 상대 경로로 유지
 const PRECACHE_URLS = [
-  '/',
-  '/index.html',
-  '/css/style.css',
-  '/js/i18n.js',
-  '/js/store.js',
-  '/js/components-data.js',
-  '/js/workspace.js',
-  '/js/app.js',
-  '/js/tutorial.js',
-  '/js/info-panel.js',
-  '/js/projects.js',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  './',
+  './index.html',
+  './css/style.css',
+  './js/i18n.js',
+  './js/store.js',
+  './js/components-data.js',
+  './js/workspace.js',
+  './js/app.js',
+  './js/tutorial.js',
+  './js/info-panel.js',
+  './js/projects.js',
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
 /* -----------------------------------------------------------------------
